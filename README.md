@@ -1,4 +1,4 @@
-# hfx-transit-routes
+# hfx-transit-data
 
 ## Project setup
 ```
