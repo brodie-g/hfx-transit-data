@@ -1,18 +1,18 @@
 <template>
   <div class="home">
     <Title msg="Check out this Halifax Transit data!"/>
-    <BusRouteMap/>
+    <TransitData/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Title from '@/components/Title.vue'; // @ is an alias to /src
-import BusRouteMap from '@/components/BusRouteMap.vue';
+import TransitData from '@/components/TransitData.vue';
 
 @Component({
   components: {
-    Title, BusRouteMap,
+    Title, TransitData,
   },
 })
 export default class Home extends Vue {}

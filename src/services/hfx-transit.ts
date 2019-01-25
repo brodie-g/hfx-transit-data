@@ -1,12 +1,11 @@
 import http from 'axios';
 
-export async function getBusRoutes() {
-    const geojsonRes = await http.get('/data/halifax-bus-routes.geojson');
-    const geojson = geojsonRes.data;
+export async function getTransitRoutes() {
+    const geojsonRes = await http.get('/data/halifax-transit-routes.geojson');
 
-    return { geojson };
+    return geojsonRes.data;
 }
 
-export function getBusRoutePassengers() {
-    return http.get('/data/halifax-bus-route-passengers.json');
+export function getTransitRoutePassengers() {
+    return http.get('/data/halifax-transit-route-passengers.json');
 }

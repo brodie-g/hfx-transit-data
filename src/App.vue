@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <h1 id="site-header">Halifax Bus Data</h1>
+        <h1 id="site-header">Halifax Transit Data</h1>
         <div id="nav">
             <router-link to="/">Home</router-link>
             |
