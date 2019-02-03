@@ -1,22 +1,26 @@
 <template>
     <div id="transit-route-map-container">
-        <h3>Transit Route Map</h3>
         <div id="transit-route-map"></div>
     </div>
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { map } from 'leaflet';
-    import 'proj4leaflet';
-    import { getTransitRoutes } from "../services/hfx-transit";
+    import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
+    import { map, LayerGroup, GeoJSON, Map } from 'leaflet';
+    import * as geojson from 'geojson';
 
     @Component
     export default class TransitRouteMap extends Vue {
-        @Prop() private geoJSON!: object;
+        @Prop() private routes: object;
+        private map: Map;
+        private LGeoJSON: any;
+
+        @Watch('routes')
+        onRoutesUpdated(routes: object) {
+            routes && this.updateRouteMap(routes);
+        }
 
         public async mounted() {
-            console.log('route map mounted');
             const ourMap = map('transit-route-map');
 
             // create the tile layer with correct attribution
@@ -24,31 +28,26 @@
             const osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
             const osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
 
-            // start the map in South-East England
             ourMap.setView(new L.LatLng(44.650346, -63.599141),11);
             ourMap.addLayer(osm);
 
-            const transitRoutes = await this.loadTransitRoutes();
-            console.log('something');
+            this.map = ourMap;
+        }
 
-            // const geoJson = L.geoJSON(transitRoutes);
-            //
-            // geoJson.addTo(ourMap);
-            const geoJson = L.Proj.geoJson(transitRoutes);
-            geoJson.bindPopup((layer) => {
+        private updateRouteMap(routes) {
+            // clear out the previous layers;
+            if (this.LGeoJSON && this.map) {
+                this.map.removeLayer(this.LGeoJSON);
+            }
+
+            const LGeoJSON: GeoJSON = L.geoJSON(routes);
+            LGeoJSON.bindPopup((layer: LayerGroup<geojson.Feature>) => {
                 console.log(layer);
                 return `${layer.feature.properties.ROUTE_NUM} ${layer.feature.properties.TITLE}`;
             });
+            LGeoJSON.addTo(this.map);
 
-            geoJson.addTo(ourMap);
-
-            window.geojson = geoJson;
-        }
-
-        private async loadTransitRoutes() {
-            const transitRoutes = await getTransitRoutes();
-            console.log('got transit routes');
-            return transitRoutes;
+            this.LGeoJSON = LGeoJSON;
         }
     }
 </script>

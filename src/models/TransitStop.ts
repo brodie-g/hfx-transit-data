@@ -1,4 +1,4 @@
-import {Geometry} from '@/models/Geometry';
+import {Geometry} from './Geometry';
 
 export class TransitStop extends Geometry {
     routeNumber: string = '';

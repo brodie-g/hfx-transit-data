@@ -1,7 +1,7 @@
 export class Geometry {
-    geoJSON: object = {};
+    feature: object = {};
 
-    static initFromGeoJSON(geoJSON: object) {
-        console.log('unitFromGeoJSON');
+    constructor(feature) {
+        this.feature = feature;
     }
 }

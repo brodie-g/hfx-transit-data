@@ -7,9 +7,10 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "jest"
   },
   "dependencies": {
+    "@types/geojson": "^7946.0.5",
     "@types/leaflet": "^1.2.14",
     "axios": "^0.18.0",
     "leaflet": "^1.4.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
+    "@types/jest": "^23.3.13",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.2.0",
     "@vue/cli-plugin-e2e-cypress": "^3.2.0",
@@ -30,8 +32,10 @@
     "@vue/cli-service": "^3.2.0",
     "@vue/test-utils": "^1.0.0-beta.20",
     "chai": "^4.1.2",
+    "jest": "^23.6.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.0.0",
     "vue-template-compiler": "^2.5.21"
   }

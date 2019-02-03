@@ -1,29 +1,37 @@
 <template>
-    <TransitRouteMap geoJSON={this.transitRoutes} />
+    <div id="transit-data">
+        <v-select multiple v-if="transitSystem" label="label" :options="transitSystem.routeList" @input="filterRoutes"></v-select>
+        <TransitRouteMap :routes="this.filteredGeoJSON" />
+    </div>
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import TransitRouteMap from './TransitRouteMap.vue';
-    import { getTransitRoutes } from "../services/hfx-transit";
+    import {TransitSystem} from "../models/TransitSystem";
     @Component({
         components: {TransitRouteMap}
     })
     export default class TransitData extends Vue {
-        transitRoutes: object = {};
+        filteredGeoJSON: object = {};
+        @Prop() private transitSystem: TransitSystem;
 
+        @Watch('transitSystem')
+        onSystemUpdated(system: TransitSystem) {
+            this.filteredGeoJSON = system.geoJSON;
 
-        public async mounted() {
-            const transitRoutes = await this.loadTransitRoutes();
-
-            this.transitRoutes = transitRoutes;
+            // get the list of routes
 
         }
 
-        private async loadTransitRoutes() {
-            const transitRoutes = await getTransitRoutes();
-            console.log('got transit routes');
-            return transitRoutes;
+        filterRoutes(routes) {
+            if (routes.length === 0) {
+                // show all the routes
+                routes = this.transitSystem.routeList;
+            }
+
+            console.log('routes filtered');
+            this.filteredGeoJSON = TransitSystem.getFilteredRoutes(routes);
         }
     }
 </script>
