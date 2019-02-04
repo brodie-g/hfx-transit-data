@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <Title msg="Check out this Halifax Transit data!"/>
     <TransitData :transitSystem="this.transitSystem"/>
   </div>
 </template>

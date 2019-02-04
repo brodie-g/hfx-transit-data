@@ -5,6 +5,7 @@ export class TransitRoute extends Geometry {
     id: string = '';
     name?: string;
     label?: string;
+    ridershipData?: object;
 
     constructor(id: string, feature: geojson.Feature) {
         super(feature);
@@ -15,5 +16,9 @@ export class TransitRoute extends Geometry {
         if (this.name) {
             this.label = `${this.id} - ${this.name}`;
         }
+    }
+
+    addRidershipData(ridershipData) {
+        this.ridershipData = ridershipData;
     }
 }

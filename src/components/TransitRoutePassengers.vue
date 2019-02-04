@@ -1,39 +1,61 @@
 <template>
-    <div id="transit-route-map-container">
-        <h3>Transit Route Map</h3>
-        <div id="transit-route-map"></div>
+    <div id="transit-passengers-container">
+        <h3>Passenger Count Data</h3>
+        <v-client-table :data="tableData" :columns="tableColumns" :options="tableOptions"></v-client-table>
     </div>
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { getTransitRoutePassengers } from "../services/hfx-transit";
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
     @Component
     export default class TransitRoutePassengers extends Vue {
-        @Prop() private msg!: string;
+        @Prop() private passengerData: object;
+        tableColumns: string[] = [];
+        tableData: object[] = [];
+        tableOptions: object = {};
 
-        public async mounted() {
-            console.log('passengers boarded mounted');
+        @Watch('passengerData')
+        onPassengersUpdated(passengerData: object[]) {
+            console.log('passengerDataUpdated');
+            this.tableColumns = ["Route_Number", "Route_Name", "Ridership_Total", "Week_Range"];
+            console.log(this.tableColumns);
+            this.tableData = passengerData;
 
-            // get the passenger data
-
-            // load it into a table
-
-            const transitRoutes = await this.loadTransitRoutes();
-        }
-
-        private async loadTransitPassengers() {
-            const transitPassengerData = await getTransitRoutePassengers();
-            console.log('got transit routes');
-            return transitPassengerData;
+            this.tableOptions = {
+                orderBy: {
+                    ascending: true,
+                    column: 'Week_Range',
+                },
+                multiSorting: {
+                    Route_Number: [
+                        {
+                            column: 'Week_Range',
+                            matchDir: false
+                        },
+                    ],
+                    Week_Range: [
+                        {
+                            column: 'Route_Number',
+                            matchDir: false
+                        },
+                    ]
+                },
+                // customSorting: {
+                //     Route_Number: function (ascending) {
+                //         return (a, b) => {
+                //             return a.Route_Number.localeCompare(b.Route_Number, undefined, {numeric: true, sensitivity: 'base'});
+                //         }
+                //     }
+                // }
+            };
         }
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-    #transit-route-map {
-        height: 680px;
+    #transit-passengers-container {
+        padding: 0 24px;
     }
 </style>

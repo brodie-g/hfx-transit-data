@@ -1,6 +1,8 @@
 <template>
-    <div id="transit-route-map-container">
-        <div id="transit-route-map"></div>
+    <div>
+        <div id="transit-route-map-container">
+            <div id="transit-route-map"></div>
+        </div>
     </div>
 </template>
 
@@ -21,14 +23,17 @@
         }
 
         public async mounted() {
-            const ourMap = map('transit-route-map');
+            const ourMap = map('transit-route-map', {
+                center: new L.LatLng(44.650346, -63.599141),
+                zoom: 11,
+                scrollWheelZoom: false,
+            });
 
             // create the tile layer with correct attribution
             const osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
             const osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
             const osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
 
-            ourMap.setView(new L.LatLng(44.650346, -63.599141),11);
             ourMap.addLayer(osm);
 
             this.map = ourMap;
