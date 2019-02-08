@@ -1,7 +1,7 @@
 <template>
     <div id="transit-data">
         <h2>Routes</h2>
-        <v-select multiple v-if="transitSystem" label="label" :options="transitSystem.routeList" @input="filterRoutes"></v-select>
+        <v-select multiple v-if="transitSystem" label="label" :options="transitSystem.routeList" @input="filterRoutes" placeholder="Select a Transit Route"></v-select>
         <TransitRouteMap :routes="this.filteredGeoJSON" />
         <TransitRoutePassengers :passengerData="this.passengerData"/>
     </div>
@@ -42,6 +42,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     .v-select {
-        padding: 4px 0px;
+        padding: 4px 2px;
     }
 </style>
