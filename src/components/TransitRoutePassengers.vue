@@ -79,7 +79,8 @@
                 yAxis: {
                     title: {
                         text: 'Number of Passengers'
-                    }
+                    },
+                    min: 0,
                 },
                 plotOptions: {
                     line: {
