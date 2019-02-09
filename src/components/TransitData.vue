@@ -23,8 +23,8 @@
         @Watch('transitSystem')
         onSystemUpdated(system: TransitSystem) {
             console.log('system updated');
-            this.filteredGeoJSON = system.geoJSON;
-            this.passengerData = system.passengerData;
+            this.filteredGeoJSON = system.getFilteredRoutes();
+            this.passengerData = system.getFilteredPassengerData();
         }
 
         filterRoutes(routes) {
@@ -32,9 +32,10 @@
                 // show all the routes
                 routes = this.transitSystem.routeList;
             }
+            this.filteredGeoJSON = this.transitSystem.getFilteredRoutes(routes);
 
-            console.log('routes filtered');
-            this.filteredGeoJSON = TransitSystem.getFilteredRoutes(routes);
+            // get passenger data for filtered routes
+            this.passengerData = this.transitSystem.getFilteredPassengerData(routes);
         }
     }
 </script>

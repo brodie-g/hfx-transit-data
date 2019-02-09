@@ -1,8 +1,8 @@
 <template>
     <div id="transit-passengers-container">
         <h3>Passenger Count Data</h3>
-        <v-client-table :data="tableData" :columns="tableColumns" :options="tableOptions"></v-client-table>
         <highcharts :options="chartOptions"></highcharts>
+        <v-client-table :data="tableData" :columns="tableColumns" :options="tableOptions"></v-client-table>
     </div>
 </template>
 
@@ -55,13 +55,45 @@
         }
 
         getChartData(passengerData: TransitRoutePassengerData[]) {
+            const routeData = {};
+
+            // calculate the ridership totals
             const ridershipDates = passengerData.reduce((obj, val: TransitRoutePassengerData) => {
+                if (!val) {
+                    return obj;
+                }
                 obj[val.dates] = val.dates in obj ? obj[val.dates] + val.ridership : val.ridership;
+
+                // get route specific data
+                if (!(val.routeNumber in routeData)) {
+                    routeData[val.routeNumber] = {
+                        name: `${val.routeNumber} - ${val.routeName}`,
+                        data: [],
+                    };
+                }
+                // add it
+                routeData[val.routeNumber].data.push({name: val.dates, y: val.ridership});
+
                 return obj;
             }, {});
 
             const categories = Object.keys(ridershipDates).sort();
-            const ridershipNumbers = categories.map((date) => [date, ridershipDates[date]]);
+
+            const ridershipNumbers = categories.map((date) => {
+                return {name: date, y: ridershipDates[date]};
+            });
+            const allRoutesSeries = {
+                name: 'All Routes',
+                data: ridershipNumbers
+            };
+
+
+            let series;
+            if (passengerData.length < 1000) {
+                series = Object.values(routeData);
+            } else {
+                series = [allRoutesSeries]
+            }
 
             return {
                 chart: {
@@ -90,10 +122,7 @@
                         enableMouseTracking: true
                     }
                 },
-                series: [{
-                    name: 'All Routes',
-                    data: ridershipNumbers
-                }]
+                series: series
             };
         }
     }

@@ -41,15 +41,6 @@ export class TransitSystem {
         });
     }
 
-    /**
-     * Filter a geoJSON representation of transit routes by
-     * @param filterRoutes
-     * @param routes
-     */
-    static getFilteredRoutes(routes: TransitRoute[]) {
-        return routes.map((route) => route.feature);
-    }
-
     city: string = '';
     geoJSON: object = {};
     routes: TransitRouteLookup = {};
@@ -65,6 +56,26 @@ export class TransitSystem {
 
         this.routeList = TransitSystem.getRouteList(routes);
         this.routes = routes;
+    }
+
+    /**
+     * Filter a geoJSON representation of transit routes by
+     * @param filterRoutes
+     * @param routes
+     */
+    getFilteredRoutes(routes?: TransitRoute[]) {
+        if (!routes) {
+            return this.geoJSON;
+        }
+        return routes.map((route) => route.feature);
+    }
+
+    getFilteredPassengerData(routes?: TransitRoute[]) {
+        if (!routes) {
+            return this.passengerData;
+        }
+
+        return [].concat(...routes.map((route) => route.ridershipData));
     }
 
     addPassengerData(passengerData: TransitRoutePassengerData[]) {

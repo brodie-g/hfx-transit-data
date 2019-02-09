@@ -1,5 +1,6 @@
 import {Geometry} from './Geometry';
 import * as geojson from 'geojson';
+import {TransitRoutePassengerData} from './TransitSystem';
 
 export class TransitRoute extends Geometry {
     id: string = '';
@@ -18,7 +19,9 @@ export class TransitRoute extends Geometry {
         }
     }
 
-    addRidershipData(ridershipData) {
-        this.ridershipData = ridershipData;
+    addRidershipData(ridershipData: TransitRoutePassengerData[]) {
+        this.ridershipData = ridershipData.sort((a, b) => {
+            return a.dates.localeCompare(b.dates);
+        });
     }
 }
