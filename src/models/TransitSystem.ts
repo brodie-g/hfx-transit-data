@@ -10,6 +10,15 @@ interface TransitStopLookup {
     [key: number]: TransitStop;
 }
 
+export class TransitRoutePassengerData {
+    constructor(public routeNumber: string,
+                public routeName: string,
+                public dates: string,
+                public ridership: number,
+                ) {
+    }
+}
+
 export class TransitSystem {
     static getRoutes(geoJSON: FeatureCollection) {
         // go through the geoJSON
@@ -46,7 +55,7 @@ export class TransitSystem {
     routes: TransitRouteLookup = {};
     routeList: TransitRoute[];
     stops: TransitStopLookup = {};
-    passengerData: object = {};
+    passengerData: TransitRoutePassengerData[] = [];
 
     constructor(geoJSON: FeatureCollection) {
         this.geoJSON = geoJSON;
@@ -58,21 +67,14 @@ export class TransitSystem {
         this.routes = routes;
     }
 
-    addPassengerData(passengerData) {
-        const passengerDataList = [];
-        console.log('adding passenger data');
-
-        const passengerRouteData = passengerData.features.reduce((passengerRoutes, passengerRouteDatum) => {
-            const routeNum = passengerRouteDatum.properties.Route_Number;
-            const props = passengerRouteDatum.properties;
+    addPassengerData(passengerData: TransitRoutePassengerData[]) {
+        const passengerRouteData = passengerData.reduce((passengerRoutes, passengerRouteDatum: TransitRoutePassengerData) => {
+            const routeNum = passengerRouteDatum.routeNumber;
 
             if (!(routeNum in passengerRoutes)) {
                 passengerRoutes[routeNum] = [];
             }
-            passengerRoutes[routeNum].push({ridershipTotal: props.Ridership_Total, weekRange: props.Week_Range});
-
-            passengerDataList.push(props);
-
+            passengerRoutes[routeNum].push(passengerRouteDatum);
             return passengerRoutes;
         }, {});
 
@@ -83,7 +85,7 @@ export class TransitSystem {
             }
         });
 
-        this.passengerData = passengerDataList;
+        this.passengerData = passengerData;
 
         return null;
     }

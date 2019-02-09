@@ -1,5 +1,5 @@
 import http from 'axios';
-import {TransitSystem} from '../models/TransitSystem';
+import {TransitSystem, TransitRoutePassengerData} from '../models/TransitSystem';
 
 const dataEndpoints = {
     ROUTES: 'https://opendata.arcgis.com/datasets/e3b2bfdd61154176822c00602504c950_0.geojson',
@@ -25,7 +25,12 @@ export async function getTransitSystem() {
     const [geoJSON, passengerData] = await Promise.all([getTransitRoutes(), getTransitRoutePassengers()]);
 
     const system = new TransitSystem(geoJSON);
-    system.addPassengerData(passengerData);
+    system.addPassengerData(passengerData.features.map((datum) => new TransitRoutePassengerData(
+        datum.properties.Route_Number,
+        datum.properties.Route_Name,
+        datum.properties.Week_Range,
+        datum.properties.Ridership_Total,
+    )));
 
     return system;
 }

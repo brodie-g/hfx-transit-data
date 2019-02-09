@@ -13,6 +13,8 @@
     "@types/geojson": "^7946.0.5",
     "@types/leaflet": "^1.2.14",
     "axios": "^0.18.0",
+    "highcharts": "^7.0.3",
+    "highcharts-vue": "^1.2.0",
     "leaflet": "^1.4.0",
     "leaflet-gesture-handling": "^1.1.8",
     "vue": "^2.5.21",

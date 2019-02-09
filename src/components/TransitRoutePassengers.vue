@@ -2,11 +2,13 @@
     <div id="transit-passengers-container">
         <h3>Passenger Count Data</h3>
         <v-client-table :data="tableData" :columns="tableColumns" :options="tableOptions"></v-client-table>
+        <highcharts :options="chartOptions"></highcharts>
     </div>
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+    import {TransitRoutePassengerData} from '../models/TransitSystem';
 
     @Component
     export default class TransitRoutePassengers extends Vue {
@@ -14,29 +16,28 @@
         tableColumns: string[] = [];
         tableData: object[] = [];
         tableOptions: object = {};
+        chartOptions: object = {};
 
-        @Watch('passengerData')
-        onPassengersUpdated(passengerData: object[]) {
-            console.log('passengerDataUpdated');
-            this.tableColumns = ["Route_Number", "Route_Name", "Ridership_Total", "Week_Range"];
-            console.log(this.tableColumns);
+        @Watch("passengerData")
+        onPassengersUpdated(passengerData: TransitRoutePassengerData[]) {
+            this.tableColumns = ["routeNumber", "routeName", "ridership", "dates"];
             this.tableData = passengerData;
 
             this.tableOptions = {
                 orderBy: {
                     ascending: true,
-                    column: 'Week_Range',
+                    column: "dates",
                 },
                 multiSorting: {
                     Route_Number: [
                         {
-                            column: 'Week_Range',
+                            column: "dates",
                             matchDir: false
                         },
                     ],
                     Week_Range: [
                         {
-                            column: 'Route_Number',
+                            column: "routeNumber",
                             matchDir: false
                         },
                     ]
@@ -48,6 +49,50 @@
                 //         }
                 //     }
                 // }
+            };
+
+            this.chartOptions = this.getChartData(passengerData);
+        }
+
+        getChartData(passengerData: TransitRoutePassengerData[]) {
+            const ridershipDates = passengerData.reduce((obj, val: TransitRoutePassengerData) => {
+                obj[val.dates] = val.dates in obj ? obj[val.dates] + val.ridership : val.ridership;
+                return obj;
+            }, {});
+
+            const categories = Object.keys(ridershipDates).sort();
+            const ridershipNumbers = categories.map((date) => [date, ridershipDates[date]]);
+
+            return {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Total Bus Ridership By Week'
+                },
+                subtitle: {
+                    text: 'Source: Halifax Open Data'
+                },
+                xAxis: {
+                    categories: categories
+                },
+                yAxis: {
+                    title: {
+                        text: 'Number of Passengers'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: false
+                        },
+                        enableMouseTracking: true
+                    }
+                },
+                series: [{
+                    name: 'All Routes',
+                    data: ridershipNumbers
+                }]
             };
         }
     }
