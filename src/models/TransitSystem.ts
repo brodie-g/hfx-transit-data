@@ -2,7 +2,7 @@ import {TransitRoute} from './TransitRoute';
 import {TransitStop} from './TransitStop';
 import {Feature, FeatureCollection, GeoJSON} from 'geojson';
 
-interface TransitRouteLookup {
+export interface TransitRouteLookup {
     [key: number]: TransitRoute;
 }
 

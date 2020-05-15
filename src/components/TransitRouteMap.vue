@@ -33,8 +33,7 @@
             const ourMap = map('transit-route-map', {
                 center: new L.LatLng(44.650346, -63.599141),
                 zoom: 11,
-                scrollWheelZoom: false,
-                gestureHandling: true,
+                scrollWheelZoom: false
             });
 
             // create the tile layer with correct attribution
@@ -54,7 +53,7 @@
             }
 
             const LGeoJSON: GeoJSON = L.geoJSON(routes);
-            LGeoJSON.bindPopup((layer: LayerGroup<geojson.Feature>) => {
+            LGeoJSON.bindPopup((layer: any) => {
                 console.log(layer);
                 return `${layer.feature.properties.ROUTE_NUM} ${layer.feature.properties.TITLE}`;
             });

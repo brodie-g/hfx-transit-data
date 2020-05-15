@@ -1,4 +1,4 @@
-import {TransitSystem} from './TransitSystem';
+import {TransitRouteLookup, TransitSystem} from './TransitSystem';
 import {FeatureCollection} from 'geojson';
 
 test('initWithRoutes', () => {
@@ -16,49 +16,3 @@ test('initWithRoutes', () => {
 
     expect(system.routes).toEqual(expected);
 });
-
-
-test('TransitSystem.getRouteList()', () => {
-    const routes = {
-        '1': {
-            id: '1',
-            feature: {},
-        },
-        '2': {
-            id: '2',
-            feature: {},
-        },
-        '11': {
-            id: '11',
-            feature: {},
-        },
-    };
-
-    const routeList = TransitSystem.getRouteList(routes);
-    const expected = [routes['1'], routes['2'], routes['11']];
-
-    expect(routeList).toEqual(expected);
-});
-
-test('TransitSystem.getFilteredRoutes()', () => {
-    const routes = {
-        '1': {
-            id: '1',
-            feature: {},
-        },
-        '2': {
-            id: '2',
-            feature: {},
-        },
-        '11': {
-            id: '11',
-            feature: {},
-        },
-    };
-
-    const routeList = TransitSystem.getRouteList(routes);
-    const expected = [routes['1'], routes['2'], routes['11']];
-
-    expect(routeList).toEqual(expected);
-});
-
