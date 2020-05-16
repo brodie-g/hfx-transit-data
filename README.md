@@ -37,3 +37,8 @@ npm run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## Docker
+
+To build, run command from project root dir `docker build -t hfx-transit-data -f docker/Dockerfile .`
