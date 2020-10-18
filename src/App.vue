@@ -17,6 +17,21 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+
+      .about {
+        .about-text {
+          margin: 20px 90px 40px 90px;
+          text-align: left;
+          line-height: 32px;
+        }
+        ul {
+          display: inline-block;
+          text-align: left;
+          li {
+            margin-bottom: 24px;
+          }
+        }
+      }
     }
 
     #nav {
