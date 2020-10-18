@@ -2,8 +2,8 @@ import http from 'axios';
 import {TransitSystem, TransitRoutePassengerData} from '../models/TransitSystem';
 
 const dataEndpoints = {
-    ROUTES: 'https://opendata.arcgis.com/datasets/e3b2bfdd61154176822c00602504c950_0.geojson',
-    PASSENGERS: 'https://opendata.arcgis.com/datasets/913b0ec9a2994df7ac6ae58357ce8117_0.geojson',
+    ROUTES: 'https://opendata.arcgis.com/datasets/69adb7a88a4e4343bf5ae7c381f2d9af_0.geojson',
+    PASSENGERS: 'https://opendata.arcgis.com/datasets/a0ece3efdc7144d69cb1881b90cd93fe_0.geojson',
 };
 
 export async function getTransitRoutes() {
