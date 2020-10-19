@@ -1,0 +1,2 @@
+feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_version
+Halifax Transit,http://www.halifax.ca/transit,en,20200831,20201122,Aug2020_v1_20200813

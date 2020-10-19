@@ -2,7 +2,7 @@
     <div id="transit-data">
         <h2>Routes</h2>
         <v-select multiple v-if="transitSystem" label="label" :options="transitSystem.routeList" @input="filterRoutes" placeholder="Select a Transit Route"></v-select>
-        <TransitRouteMap :routes="this.filteredGeoJSON" />
+        <TransitRouteMap :routes="this.filteredGeoJSON" :vehicles="this.filteredVehicles" />
         <TransitRoutePassengers :passengerData="this.passengerData"/>
     </div>
 </template>
@@ -18,6 +18,7 @@
     export default class TransitData extends Vue {
         filteredGeoJSON: object = {};
         passengerData: object = {};
+        filteredVehicles: any[] = [];
         @Prop() private transitSystem: TransitSystem;
 
         @Watch('transitSystem')
@@ -25,6 +26,7 @@
             console.log('system updated');
             this.filteredGeoJSON = system.getFilteredRoutes();
             this.passengerData = system.getFilteredPassengerData();
+            this.filteredVehicles = system.getFilteredVehicles();
         }
 
         filterRoutes(routes) {
@@ -36,6 +38,8 @@
 
             // get passenger data for filtered routes
             this.passengerData = this.transitSystem.getFilteredPassengerData(routes);
+
+            this.filteredVehicles = this.transitSystem.getFilteredVehicles(routes);
         }
     }
 </script>

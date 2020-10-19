@@ -1,6 +1,9 @@
 import {TransitRoute} from './TransitRoute';
 import {TransitStop} from './TransitStop';
 import {Feature, FeatureCollection, GeoJSON} from 'geojson';
+const Pbf = require('pbf');
+
+const FeedMessage: any = window['FeedMessage'];
 
 export interface TransitRouteLookup {
     [key: number]: TransitRoute;
@@ -47,6 +50,7 @@ export class TransitSystem {
     routeList: TransitRoute[];
     stops: TransitStopLookup = {};
     passengerData: TransitRoutePassengerData[] = [];
+    vehicles: any[];
 
     constructor(geoJSON: FeatureCollection) {
         this.geoJSON = geoJSON;
@@ -78,6 +82,20 @@ export class TransitSystem {
         return [].concat(...routes.map((route) => route.ridershipData));
     }
 
+    getFilteredVehicles(routes?: any[]) {
+        console.log('getting filtered vehicles');
+        if (!routes) {
+            return this.vehicles;
+        }
+
+        const routeIds = routes.map(route => `${route.id}`);
+
+        return this.vehicles.filter(vehicle => {
+            const routeId = vehicle.vehicle.trip.route_id;
+            return routeIds.includes(routeId);
+        });
+    }
+
     addPassengerData(passengerData: TransitRoutePassengerData[]) {
         const passengerRouteData = passengerData.reduce((passengerRoutes, passengerRouteDatum: TransitRoutePassengerData) => {
             const routeNum = passengerRouteDatum.routeNumber;
@@ -99,5 +117,25 @@ export class TransitSystem {
         this.passengerData = passengerData;
 
         return null;
+    }
+
+    addVehiclePositions(vehiclePositionsData: ArrayBuffer) {
+        // convert protobuf array buffer to object
+        console.log('addVehiclePositions');
+        const pbf = new Pbf(new Uint8Array(vehiclePositionsData));
+        const vehiclePositions = FeedMessage.read(pbf);
+
+        // add the data into the TransitSystem
+        console.log('parsed the pbf data');
+        this.setVehicles(vehiclePositions);
+    }
+
+    refreshVehiclePositions() {
+
+    }
+
+    setVehicles(vehiclePositions) {
+        console.log('setting vehicles');
+        this.vehicles = vehiclePositions.entity;
     }
 }
